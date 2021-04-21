@@ -44,7 +44,6 @@ public class Person {
     }
 
 
-
     static void insertSampleOfData() {
         Person p1 = new Person("Jan", "Nowak", "ul.Miodowa 10, Szczecin", 1976, 10,
                 5, 1761005111, personIdGenerator.getAndIncrement(), true, 10,
@@ -60,7 +59,7 @@ public class Person {
                 2021, null, null);
         Person p5 = new Person("Stanisław", "Wiatr", "Sloneczna 2, Poznań", 1997, 8,
                 4, 1999800052, personIdGenerator.getAndIncrement(), false, 3,
-                1, 2021, null,null );
+                1, 2021, null, null);
         listOfPersons.add(p1);
         listOfPersons.add(p2);
         listOfPersons.add(p2);
@@ -69,30 +68,9 @@ public class Person {
         listOfPersons.add(p5);
     }
 
-
-    static void insertConsumerHouse(){
-
-    }
-
-
-
-
-
-
-
-
-
-
-
     static List<Person> getAllListOfPersons() {
         return listOfPersons;
     }
-
-
-    public static void setListOfRentedArea(ConsumerWarehouse cw, Person p){
-
-    }
-
 
     static void setPermissionToOpenSpace(long idFromUser, boolean newPermission) {
         for (Person i : listOfPersons) {
@@ -103,6 +81,16 @@ public class Person {
                 System.out.println("Successfull permission changed");
             }
         }
+    }
+
+    public static Person getPersonById(String id){
+        for(Person p:listOfPersons){
+           Long idLong= Long.parseLong(id);
+            if(p.id.equals(idLong)){
+                return p;
+            }
+        }
+        return null;
     }
 
     public static void getDateOfFirstRentSpace(long id) {
@@ -121,8 +109,6 @@ public class Person {
 
         }
     }
-
-
 
 
     @Override
