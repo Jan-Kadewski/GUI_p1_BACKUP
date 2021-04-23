@@ -21,11 +21,12 @@ public class Person {
     static final AtomicLong personIdGenerator = new AtomicLong();
     static List<Person> listOfPersons = new ArrayList<>();
     static List<TenantAlert> listOfTenantAlert = new ArrayList<>();
-    static List<ConsumerWarehouse> listOfRentedArea;
+    List<ConsumerWarehouse> listOfRentedArea;
+    static List<Item> listOfItem = new ArrayList<>();
 
     public Person(String name, String lastName, String address, int birthdayYear, int birthdayMonth, int birthdayDay,
                   long pesel, Long id, boolean isAllowedToOpenAndPutOrTakeIntoSpace, int firstDayOfRent,
-                  int firstMonthOfRent, int firstYearOfRent, List<TenantAlert> listOfTenantAlert, List<ConsumerWarehouse> listOfRentedArea) {
+                  int firstMonthOfRent, int firstYearOfRent, List<TenantAlert> listOfTenantAlert, List<ConsumerWarehouse> listOfRentedArea, List<Item> listOfItem) {
         this.name = name;
         this.lastName = lastName;
         this.address = address;
@@ -40,26 +41,50 @@ public class Person {
         this.pesel = pesel;
         this.id = id;
         this.isAllowedToOpenAndPutOrTakeIntoSpace = isAllowedToOpenAndPutOrTakeIntoSpace;
-        Person.listOfRentedArea = new ArrayList<ConsumerWarehouse>();
+        this.listOfRentedArea = listOfRentedArea;
+        this.listOfItem = listOfItem;
+
     }
 
+    public List<ConsumerWarehouse> getListOfRentedArea() {
+        return listOfRentedArea;
+    }
 
     static void insertSampleOfData() {
+
+        ArrayList<Item> listOfAddedItem = new ArrayList<>();
+        ArrayList<Item> listOfAddedItem1 = new ArrayList<>();
+        ArrayList<Item> listOfAddedItem2 = new ArrayList<>();
+        ArrayList<Item> listOfAddedItem3 = new ArrayList<>();
+        ArrayList<Item> listOfAddedItem4 = new ArrayList<>();
+
+        ArrayList<ConsumerWarehouse> listOfRentedAreaForP1 = new ArrayList<ConsumerWarehouse>();
+        ArrayList<ConsumerWarehouse> listOfRentedAreaForP2 = new ArrayList<ConsumerWarehouse>();
+        ArrayList<ConsumerWarehouse> listOfRentedAreaForP3 = new ArrayList<ConsumerWarehouse>();
+        ArrayList<ConsumerWarehouse> listOfRentedAreaForP4 = new ArrayList<ConsumerWarehouse>();
+        ArrayList<ConsumerWarehouse> listOfRentedAreaForP5 = new ArrayList<ConsumerWarehouse>();
+
+        listOfRentedAreaForP1.add(new ConsumerWarehouse(1, 2020, 3, 10, 10, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+        listOfRentedAreaForP2.add(new ConsumerWarehouse(10, 2021, 1, 9, 300, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+        listOfRentedAreaForP3.add(new ConsumerWarehouse(78, 2021, 1, 8, 250, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+        listOfRentedAreaForP4.add(new ConsumerWarehouse(43, 2021, 1, 15, 230, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+        listOfRentedAreaForP5.add(new ConsumerWarehouse(120, 2021, 1, 14, 600, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+
         Person p1 = new Person("Jan", "Nowak", "ul.Miodowa 10, Szczecin", 1976, 10,
                 5, 1761005111, personIdGenerator.getAndIncrement(), true, 10,
-                1, 2021, null, null);
+                1, 2021, null, listOfRentedAreaForP1,listOfAddedItem);
         Person p2 = new Person("Kasia", "Jasiak", "ul.Piosenkarzy 3, Płock", 1990, 4,
                 10, 1990063025, personIdGenerator.getAndIncrement(), false, 15, 1,
-                2021, null, null);
+                2021, null, listOfRentedAreaForP2,listOfAddedItem1);
         Person p3 = new Person("Kacper", "Kowalczyk", "ul.Tramwajów 51, Warszawa", 1963, 9,
                 19, 1963091941, personIdGenerator.getAndIncrement(), true, 21,
-                1, 2021, null, null);
+                1, 2021, null, listOfRentedAreaForP3,listOfAddedItem2);
         Person p4 = new Person("Basia", "Nowa", "Starówka 5, Zakopane", 1999, 10,
                 4, 1999100410, personIdGenerator.getAndIncrement(), false, 5, 1,
-                2021, null, null);
+                2021, null, listOfRentedAreaForP4,listOfAddedItem3);
         Person p5 = new Person("Stanisław", "Wiatr", "Sloneczna 2, Poznań", 1997, 8,
                 4, 1999800052, personIdGenerator.getAndIncrement(), false, 3,
-                1, 2021, null, null);
+                1, 2021, null, listOfRentedAreaForP5,listOfAddedItem4);
         listOfPersons.add(p1);
         listOfPersons.add(p2);
         listOfPersons.add(p2);
@@ -72,7 +97,7 @@ public class Person {
         return listOfPersons;
     }
 
-    static void setPermissionToOpenSpace(long idFromUser, boolean newPermission) {
+   public static void setPermissionToOpenSpace(long idFromUser, boolean newPermission) {
         for (Person i : listOfPersons) {
             if (i.id == idFromUser) {
 //               System.out.println(i.isAllowedToOpenAndPutOrTakeIntoSpace);
@@ -83,10 +108,10 @@ public class Person {
         }
     }
 
-    public static Person getPersonById(String id){
-        for(Person p:listOfPersons){
-           Long idLong= Long.parseLong(id);
-            if(p.id.equals(idLong)){
+    public static Person getPersonById(String id) {
+        for (Person p : listOfPersons) {
+            Long idLong = Long.parseLong(id);
+            if (p.id.equals(idLong)) {
                 return p;
             }
         }
