@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Person {
@@ -18,9 +19,10 @@ public class Person {
     int firstMonthOfRent;
     int firstYearOfRent;
     boolean isAllowedToOpenAndPutOrTakeIntoSpace;
+    double totalCostForRents;
     static final AtomicLong personIdGenerator = new AtomicLong();
     static List<Person> listOfPersons = new ArrayList<>();
-    static List<TenantAlert> listOfTenantAlert = new ArrayList<>();
+    List<TenantAlert> listOfTenantAlert = new ArrayList<>();
     List<ConsumerWarehouse> listOfRentedArea;
     static List<Item> listOfItem = new ArrayList<>();
 
@@ -43,7 +45,6 @@ public class Person {
         this.isAllowedToOpenAndPutOrTakeIntoSpace = isAllowedToOpenAndPutOrTakeIntoSpace;
         this.listOfRentedArea = listOfRentedArea;
         this.listOfItem = listOfItem;
-
     }
 
     public List<ConsumerWarehouse> getListOfRentedArea() {
@@ -52,11 +53,6 @@ public class Person {
 
     static void insertSampleOfData() {
 
-        ArrayList<Item> listOfAddedItem = new ArrayList<>();
-        ArrayList<Item> listOfAddedItem1 = new ArrayList<>();
-        ArrayList<Item> listOfAddedItem2 = new ArrayList<>();
-        ArrayList<Item> listOfAddedItem3 = new ArrayList<>();
-        ArrayList<Item> listOfAddedItem4 = new ArrayList<>();
 
         ArrayList<ConsumerWarehouse> listOfRentedAreaForP1 = new ArrayList<ConsumerWarehouse>();
         ArrayList<ConsumerWarehouse> listOfRentedAreaForP2 = new ArrayList<ConsumerWarehouse>();
@@ -64,27 +60,27 @@ public class Person {
         ArrayList<ConsumerWarehouse> listOfRentedAreaForP4 = new ArrayList<ConsumerWarehouse>();
         ArrayList<ConsumerWarehouse> listOfRentedAreaForP5 = new ArrayList<ConsumerWarehouse>();
 
-        listOfRentedAreaForP1.add(new ConsumerWarehouse(1, 2020, 3, 10, 10, ConsumerWarehouse.idCounter.getAndIncrement(),true));
-        listOfRentedAreaForP2.add(new ConsumerWarehouse(10, 2021, 1, 9, 300, ConsumerWarehouse.idCounter.getAndIncrement(),true));
-        listOfRentedAreaForP3.add(new ConsumerWarehouse(78, 2021, 1, 8, 250, ConsumerWarehouse.idCounter.getAndIncrement(),true));
-        listOfRentedAreaForP4.add(new ConsumerWarehouse(43, 2021, 1, 15, 230, ConsumerWarehouse.idCounter.getAndIncrement(),true));
-        listOfRentedAreaForP5.add(new ConsumerWarehouse(120, 2021, 1, 14, 600, ConsumerWarehouse.idCounter.getAndIncrement(),true));
+        listOfRentedAreaForP1.add(new ConsumerWarehouse(25, 2020, 3, 10, 2021, 1, 15, 200, ConsumerWarehouse.idCounter.getAndIncrement(), true));
+        listOfRentedAreaForP2.add(new ConsumerWarehouse(10, 2021, 1, 9, 2021, 1, 15, 300, ConsumerWarehouse.idCounter.getAndIncrement(), true));
+        listOfRentedAreaForP3.add(new ConsumerWarehouse(78, 2021, 1, 8, 2021, 1, 25, 250, ConsumerWarehouse.idCounter.getAndIncrement(), true));
+        listOfRentedAreaForP4.add(new ConsumerWarehouse(43, 2021, 1, 15, 2021, 1, 30, 230, ConsumerWarehouse.idCounter.getAndIncrement(), true));
+        listOfRentedAreaForP5.add(new ConsumerWarehouse(120, 2021, 1, 14, 2021, 1, 29, 600, ConsumerWarehouse.idCounter.getAndIncrement(), true));
 
         Person p1 = new Person("Jan", "Nowak", "ul.Miodowa 10, Szczecin", 1976, 10,
                 5, 1761005111, personIdGenerator.getAndIncrement(), true, 10,
-                1, 2021, null, listOfRentedAreaForP1,listOfAddedItem);
+                1, 2021, null, listOfRentedAreaForP1, listOfItem);
         Person p2 = new Person("Kasia", "Jasiak", "ul.Piosenkarzy 3, Płock", 1990, 4,
                 10, 1990063025, personIdGenerator.getAndIncrement(), false, 15, 1,
-                2021, null, listOfRentedAreaForP2,listOfAddedItem1);
+                2021, null, listOfRentedAreaForP2, listOfItem);
         Person p3 = new Person("Kacper", "Kowalczyk", "ul.Tramwajów 51, Warszawa", 1963, 9,
                 19, 1963091941, personIdGenerator.getAndIncrement(), true, 21,
-                1, 2021, null, listOfRentedAreaForP3,listOfAddedItem2);
+                1, 2021, null, listOfRentedAreaForP3, listOfItem);
         Person p4 = new Person("Basia", "Nowa", "Starówka 5, Zakopane", 1999, 10,
                 4, 1999100410, personIdGenerator.getAndIncrement(), false, 5, 1,
-                2021, null, listOfRentedAreaForP4,listOfAddedItem3);
+                2021, null, listOfRentedAreaForP4, listOfItem);
         Person p5 = new Person("Stanisław", "Wiatr", "Sloneczna 2, Poznań", 1997, 8,
                 4, 1999800052, personIdGenerator.getAndIncrement(), false, 3,
-                1, 2021, null, listOfRentedAreaForP5,listOfAddedItem4);
+                1, 2021, null, listOfRentedAreaForP5, listOfItem);
         listOfPersons.add(p1);
         listOfPersons.add(p2);
         listOfPersons.add(p2);
@@ -97,15 +93,35 @@ public class Person {
         return listOfPersons;
     }
 
-   public static void setPermissionToOpenSpace(long idFromUser, boolean newPermission) {
+    public static void payForRent(Scanner sc) {
+        System.out.println("Lista zadłużonych mieszkań");
+        for (int i = 0; i < Main.choosenPerson.listOfTenantAlert.size(); i++)
+            System.out.println(Main.choosenPerson.listOfTenantAlert.get(i));
+        System.out.println("Podaj ID za które pomieszczenie chcesz zapłacić");
+        int idFromUser = sc.nextInt();
+        try {
+            Main.choosenPerson.listOfTenantAlert.remove(idFromUser);
+            System.out.println("Zapłata przebiegła pomyślnie");
+            SubMenu.actionsOfWarehouse();
+        } catch (Exception e) {
+            System.out.println("Wybrano złe ID. Powrót do menu głównego");
+            SubMenu.actionsOfWarehouse();
+        }
+
+    }
+
+    public static void setPermissionToOpenSpace(Scanner sc) {
+        System.out.println("podaj ID użytkownika");
+        Long idFromUser = sc.nextLong();
+        System.out.println("Podaj nowe prawa wpisując \" true \" lub \" false\"");
+        boolean newPermission = sc.nextBoolean();
         for (Person i : listOfPersons) {
-            if (i.id == idFromUser) {
-//               System.out.println(i.isAllowedToOpenAndPutOrTakeIntoSpace);
+            if (i.id.equals(idFromUser)) {
                 i.isAllowedToOpenAndPutOrTakeIntoSpace = newPermission;
-//               System.out.println(i.isAllowedToOpenAndPutOrTakeIntoSpace);
-                System.out.println("Successfull permission changed");
+                System.out.println("Zmiana uprawnień powiodła się");
             }
         }
+
     }
 
     public static Person getPersonById(String id) {
@@ -118,19 +134,15 @@ public class Person {
         return null;
     }
 
-    public static void getDateOfFirstRentSpace(long id) {
-        for (Person p : listOfPersons) {
-            try {
-                if (p.id == id && p.dateOfFirstRentArea == null) {
-                    System.out.println("You didn't rent any Space");
-                } else {
-                    if (p.id == id) {
-                        System.out.println(p.dateOfFirstRentArea);
-                    }
-                }
-            } catch (Exception NeverRentException) {
-                NeverRentException.printStackTrace();
+    public static void getDateOfFirstRentSpace() {
+
+        try {
+            if (Main.choosenPerson.dateOfFirstRentArea == null) {
+                System.out.println("Nigdy nie wynajmowałeś mieszkania");
             }
+        } catch (Exception NeverRentException) {
+            NeverRentException.printStackTrace();
+
 
         }
     }

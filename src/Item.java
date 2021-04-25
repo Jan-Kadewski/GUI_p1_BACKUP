@@ -32,13 +32,13 @@ public class Item {
         String optionFromUser = sc.next();
         switch (optionFromUser) {
             case "1": {
+                //TODO: Dodawać do odpowiedniej listy dodane przedmioty, połączyć ten kod z metodą addItem
                 System.out.print("Podaj nazwę przedmiotu:");
                 String itemName = sc.next();
                 System.out.println("Podaj pole powierzchni:");
                 double itemArea = sc.nextDouble();
                 Person.listOfItem.add(new Item(itemName, itemArea));
                 System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + itemArea);
-                // dokonczyc
                 System.out.println("Przedmiot został pomyślnie dodany");
                 SubMenu.actionsOfWarehouse();
                 break;
@@ -46,17 +46,15 @@ public class Item {
             case "2": {
                 System.out.print("Podaj nazwę przedmiotu");
                 String itemName = sc.next();
-                System.out.println("Podaj Szerokosc");
+                System.out.println("Podaj Szerokość");
                 double width = sc.nextDouble();
                 System.out.println("Podaj długość");
                 double length = sc.nextDouble();
                 System.out.println("Podaj wysokość");
                 double height = sc.nextDouble();
-                System.out.println(Person.listOfItem);
                 System.out.println("Podano przedmiot o nazwie: " + itemName + " Szerokości: " + width + " długości: " + length +
                         " wysokości: " + height + "Zajmujący: " + height * width * length + " pola powierzchni");
                 SubMenu.actionsOfWarehouse();
-
                 break;
 
             }

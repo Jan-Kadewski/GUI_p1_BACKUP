@@ -5,24 +5,25 @@ import java.util.Scanner;
 public class SubMenu {
 
     private static final Scanner sc = ScannerManager.getScanner();
-    static void chooseUser(){
+
+    static void chooseUser() {
         ArrayList<String> menu = new ArrayList<String>();
         menu.add("Pokaz listę wszystkich użytkowników");
         menu.add("Wybierz użytkownika po ID");
-        MenuManager.menuGeneratorAndDisplay("WYBIERZ UŻYTKOWNIKA",menu);
+        MenuManager.menuGeneratorAndDisplay("WYBIERZ UŻYTKOWNIKA", menu);
         System.out.print("Wybrana opcja to: ");
-        switch(sc.next()){
-            case "1":{
-                for(Person p:Person.getAllListOfPersons()){
+        switch (sc.next()) {
+            case "1": {
+                for (Person p : Person.getAllListOfPersons()) {
                     System.out.println("Użytkownik ID: " + p.id + "; Szczegóły: " + p);
                 }
                 chooseUser();
             }
-            case "2":{
+            case "2": {
                 System.out.print("Podaj ID:");
                 String idFromUser = sc.next();
-                Main.choosenPerson =  Person.getPersonById(idFromUser);
-                System.out.println("Wybrałeś użytkownika:"+Main.choosenPerson);
+                Main.choosenPerson = Person.getPersonById(idFromUser);
+                System.out.println("Wybrałeś użytkownika:" + Main.choosenPerson);
                 actionsForChosenUser();
             }
         }
@@ -35,7 +36,7 @@ public class SubMenu {
         menu.add("Cofnij do głównego menu");
         menu.add("Zamknij program");
 
-        MenuManager.menuGeneratorAndDisplay("MOŻLIWE OPCJE",menu);
+        MenuManager.menuGeneratorAndDisplay("MOŻLIWE OPCJE", menu);
         System.out.print("Wybrana opcja to: ");
         switch (sc.next()) {
             case "1": {
@@ -58,12 +59,14 @@ public class SubMenu {
 
     }
 
-    static void actionsOfWarehouse(){
+    static void actionsOfWarehouse() {
         ArrayList<String> options = new ArrayList<String>();
         options.add("Wyświetl obecny stan wynajętych pomieszczeń przez wybranego użytkownika");
         options.add("Wyświetl wolne pomieszczenia");
         options.add("Wynajmij wolne pomieszczenia by ID");
         options.add("Pokaz moje wynajete pomieszczenia");
+        options.add("Zapłać za zaległe pomieszczenie");
+        options.add("Zmień uprawnienia do pomieszczenia");
         options.add("Włóż nowy przedmiot do pomieszczenia");
         options.add("Wyjmij  przedmiot z pomieszczenia");
         options.add("Cofnij do głównego menu");
@@ -82,39 +85,51 @@ public class SubMenu {
                 break;
             }
             case "2" -> {
-               ConsumerWarehouse.showConsumerWarehouseAbleToRent();
+                ConsumerWarehouse.showConsumerWarehouseAbleToRent();
                 actionsOfWarehouse();
                 System.out.println();
                 break;
             }
             case "3" -> {
                 ConsumerWarehouse.rentSpaceById(sc);
+//                ConsumerWarehouse.checkIfRentExpired(sc);
+                SubMenu.actionsOfWarehouse();
                 //TODO: Wybierz wolne pomieszczenie , które w property czyWynajete ma false podając w param ID
                 break;
             }
             case "4" -> {
-                System.out.println("Wynajęte przestrzenie magazynowe przez:"+ Main.choosenPerson);
+                Person.getDateOfFirstRentSpace();
+                System.out.println("Wynajęte przestrzenie magazynowe przez:" + Main.choosenPerson);
                 ConsumerWarehouse.showRentedSpace();
                 SubMenu.actionsOfWarehouse();
                 break;
             }
             case "5" -> {
-                ConsumerWarehouse.addItemToRentedSpace(sc );
+                Person.payForRent(sc);
+                SubMenu.actionsOfWarehouse();
                 break;
             }
             case "6" -> {
+                Person.setPermissionToOpenSpace(sc);
+                SubMenu.actionsOfWarehouse();
                 break;
             }
             case "7" -> {
-                actionsForChosenUser();
+                ConsumerWarehouse.addItemToRentedSpace(sc);
+                SubMenu.actionsOfWarehouse();
                 break;
             }
             case "8" -> {
-                Menu.exitProgram(sc);
+                //TODO: FUNKCJA wyjmij z pomieszczenia
                 break;
             }
+            case "9" -> {
+                Menu.showMainMenu();
+            }
+            case "10" -> {
+                Menu.exitProgram(sc);
+            }
         }
-
 
     }
 }
