@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ConsumerWarehouse implements Runnable {
+public class ConsumerWarehouse {
     public static final AtomicLong idCounter = new AtomicLong();
     double width;
     double length;
@@ -185,16 +185,5 @@ public class ConsumerWarehouse implements Runnable {
                 '}';
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            System.out.println("Wykonuje sie co 5 sekund");
-            checkIfRentExpired(sc);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }
