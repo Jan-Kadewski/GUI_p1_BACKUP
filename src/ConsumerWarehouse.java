@@ -154,10 +154,10 @@ public class ConsumerWarehouse {
     public static void addItemToRentedSpace(Scanner sc) {
         System.out.println(Main.choosenPerson.listOfRentedArea);
         System.out.println("Wybierz do którego pomieszczenia chcesz włożyć przedmiot podająć ID pomieszczenia");
-        int idFromUser = sc.nextInt();
+        long idFromUser = sc.nextInt();
         for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
-            if (cw.id == Long.parseLong(String.valueOf(idFromUser))) {
-                // wybrać czy chce utworzyć przed pp czy przez 3 wymiary
+            if (cw.id == idFromUser) {
+                System.out.println("Wszedłem");
                 Item.itemMenu(sc);
                 // TODO:zwalidować wybór magazynu i wybranie ITEMU
 
@@ -168,20 +168,42 @@ public class ConsumerWarehouse {
         }
     }
 
+    public static void removeItemFromRentedSpace(Scanner sc) {
+        for (int i = 0; i < Person.listOfItem.size(); i++) {
+            System.out.println(Person.listOfItem.get(i));
+        }
+        System.out.println("Podaj ID przedmiotu do wyjęcia");
+        long id = sc.nextLong();
+            for (Item i : Person.listOfItem) {
+                if (i.id == id) {
+                    for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
+                        System.out.println(cw.usableArea);
+                        cw.usableArea = cw.usableArea + Person.listOfItem.get(Math.toIntExact(id)).volume;
+                        System.out.println(cw.usableArea);
+                    }
+                    Person.listOfItem.remove((int) id);
+                    if(Person.listOfItem.size() ==0){
+                        System.out.println("Brak przedmiotów, powrót do głównego menu");
+                        SubMenu.actionsOfWarehouse();
+                    }
+                } else {
+                    System.out.println("Podano złe ID");
+                }
+            }
+
+
+    }
 
     @Override
     public String toString() {
         return "ConsumerWarehouse{" +
-                "width=" + width +
-                ", length=" + length +
-                ", height=" + height +
+                ", id=" + id +
+                ", isRented=" + isRented +
                 ", usableArea=" + usableArea +
                 ", startRentYear=" + startRentYear +
                 ", startRentMonth=" + startRentMonth +
                 ", startRentDay=" + startRentDay +
                 ", costOfRentSpace=" + costOfRentSpace +
-                ", id=" + id +
-                ", isRented=" + isRented +
                 '}';
     }
 

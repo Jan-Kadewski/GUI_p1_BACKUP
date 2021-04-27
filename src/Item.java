@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Item {
     String name;
@@ -9,17 +10,22 @@ public class Item {
     double height;
     Double volume;
     Scanner sc = new Scanner(System.in);
-    public Item(String name, double width, double length, double height) {
+    long id;
+    public static final AtomicLong idCounter = new AtomicLong();
+
+    public Item(String name, double width, double length, double height, long id) {
         this.name = name;
         this.width = width;
         this.length = length;
         this.height = height;
         this.volume = width * length * height;
+        this.id = id;
     }
 
-    public Item(String name, double volume) {
+    public Item(String name, double volume, long id) {
         this.name = name;
         this.volume = volume;
+        this.id = id;
     }
 
 
@@ -32,15 +38,26 @@ public class Item {
         String optionFromUser = sc.next();
         switch (optionFromUser) {
             case "1": {
-                //TODO: Dodawać do odpowiedniej listy dodane przedmioty, połączyć ten kod z metodą addItem
                 System.out.print("Podaj nazwę przedmiotu:");
                 String itemName = sc.next();
                 System.out.println("Podaj pole powierzchni:");
                 double itemArea = sc.nextDouble();
-                Person.listOfItem.add(new Item(itemName, itemArea));
-                System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + itemArea);
-                System.out.println("Przedmiot został pomyślnie dodany");
-                SubMenu.actionsOfWarehouse();
+                System.out.println(Main.choosenPerson.listOfRentedArea);
+                for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
+                    if (cw.usableArea >= itemArea) {
+                        Person.listOfItem.add(new Item(itemName, itemArea, idCounter.getAndIncrement()));
+                        System.out.println(Person.listOfItem);
+                        cw.usableArea = cw.usableArea - itemArea;
+                        System.out.println("Pozostała przestrzeń w magazynie " +cw.usableArea);
+                        System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + itemArea);
+                        System.out.println("Przedmiot został pomyślnie dodany");
+                        SubMenu.actionsOfWarehouse();
+                    } else {
+                        System.out.println("Niepomyślne wkładanie przedmiotu. Przedmiot za duży");
+                        SubMenu.actionsOfWarehouse();
+                    }
+
+                }
                 break;
             }
             case "2": {
@@ -52,10 +69,28 @@ public class Item {
                 double length = sc.nextDouble();
                 System.out.println("Podaj wysokość");
                 double height = sc.nextDouble();
-                System.out.println("Podano przedmiot o nazwie: " + itemName + " Szerokości: " + width + " długości: " + length +
-                        " wysokości: " + height + "Zajmujący: " + height * width * length + " pola powierzchni");
-                SubMenu.actionsOfWarehouse();
-                break;
+
+                for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
+                    if (cw.usableArea > (width * length * height)) {
+                        Person.listOfItem.add(new Item(itemName, width, length, height, idCounter.getAndIncrement()));
+                        System.out.println(Person.listOfItem);
+                        cw.usableArea = cw.usableArea - width * length * height;
+                        System.out.println(cw.usableArea);
+                        System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + width * length * height);
+                        System.out.println("Przedmiot został pomyślnie dodany");
+                        SubMenu.actionsOfWarehouse();
+                    } else {
+                        System.out.println("Przedmiot jest za duży i nie mieści się w magazynie");
+                        SubMenu.actionsOfWarehouse();
+
+                    }
+
+                    System.out.println("Podano przedmiot o nazwie: " + itemName + " Szerokości: " + width + " długości: " + length +
+                            " wysokości: " + height + "Zajmujący: " + height * width * length + " pola powierzchni");
+                    SubMenu.actionsOfWarehouse();
+                    break;
+
+                }
 
             }
             case "3": {
@@ -64,22 +99,15 @@ public class Item {
             case "4": {
                 Menu.exitProgram(sc);
             }
-
         }
-        System.out.println("Jak chcesz wstawić przedmiot:");
-        System.out.println("Jak chcesz wstawić przedmiot:");
     }
-
-
-
-
-
 
 
     @Override
     public String toString() {
         return "Item{" +
-                "name='" + name + '\'' +
+                ", ID przedmiotu " + id +
+                " name='" + name + '\'' +
                 ", width=" + width +
                 ", length=" + length +
                 ", height=" + height +

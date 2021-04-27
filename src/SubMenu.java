@@ -77,7 +77,6 @@ public class SubMenu {
         switch (sc.next()) {
             case "1" -> {
                 System.out.println("Obecny stan wynajętych pomieszczeń:");
-
                 System.out.println(Main.choosenPerson.getListOfRentedArea());
                 System.out.println();
                 System.out.println();
@@ -121,6 +120,8 @@ public class SubMenu {
             }
             case "8" -> {
                 //TODO: FUNKCJA wyjmij z pomieszczenia
+                ConsumerWarehouse.removeItemFromRentedSpace(sc);
+                SubMenu.actionsOfWarehouse();
                 break;
             }
             case "9" -> {
@@ -128,6 +129,12 @@ public class SubMenu {
             }
             case "10" -> {
                 Menu.exitProgram(sc);
+            }
+            case "11" ->{
+               ParkingSpace.rentParkingSpaceById(sc);
+            }
+            case "12"->{
+                ConsumerWarehouse.removeItemFromRentedSpace(sc);
             }
         }
 
