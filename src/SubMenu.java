@@ -69,6 +69,7 @@ public class SubMenu {
         options.add("Zmień uprawnienia do pomieszczenia");
         options.add("Włóż nowy przedmiot do pomieszczenia");
         options.add("Wyjmij  przedmiot z pomieszczenia");
+        options.add("Zapisz informacje do pliku");
         options.add("Cofnij do głównego menu");
         options.add("Zamknij program");
 
@@ -119,23 +120,24 @@ public class SubMenu {
                 break;
             }
             case "8" -> {
-                //TODO: FUNKCJA wyjmij z pomieszczenia
                 ConsumerWarehouse.removeItemFromRentedSpace(sc);
                 SubMenu.actionsOfWarehouse();
                 break;
             }
-            case "9" -> {
-                Menu.showMainMenu();
+            case "9"->{
+                //TODO: TUTAJ METODA ZAPISUJACA DO PLIKU DANE
             }
             case "10" -> {
+                Menu.showMainMenu();
+            }
+
+            case "11" -> {
                 Menu.exitProgram(sc);
             }
-            case "11" ->{
-               ParkingSpace.rentParkingSpaceById(sc);
+            case "12" -> {
+                ParkingSpace.rentParkingSpaceById(sc);
             }
-            case "12"->{
-                ConsumerWarehouse.removeItemFromRentedSpace(sc);
-            }
+
         }
 
     }

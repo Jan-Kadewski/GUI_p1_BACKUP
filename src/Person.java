@@ -95,20 +95,24 @@ public class Person {
     }
 
     public static void payForRent(Scanner sc) {
-        System.out.println("Lista zadłużonych mieszkań");
-        for (int i = 0; i < Main.choosenPerson.listOfTenantAlert.size(); i++)
-            System.out.println(Main.choosenPerson.listOfTenantAlert.get(i));
-        System.out.println("Podaj ID za które pomieszczenie chcesz zapłacić");
-        int idFromUser = sc.nextInt();
-        try {
-            Main.choosenPerson.listOfTenantAlert.remove(idFromUser);
-            System.out.println("Zapłata przebiegła pomyślnie");
-            SubMenu.actionsOfWarehouse();
-        } catch (Exception e) {
-            System.out.println("Wybrano złe ID. Powrót do menu głównego");
-            SubMenu.actionsOfWarehouse();
+        if(Main.choosenPerson.listOfTenantAlert.size() ==0){
+            System.out.println("Brak zadłużonych pomieszczeń");
         }
-
+        else {
+            System.out.println("Lista zadłużonych mieszkań");
+            for (int i = 0; i < Main.choosenPerson.listOfTenantAlert.size(); i++)
+                System.out.println(Main.choosenPerson.listOfTenantAlert.get(i));
+            System.out.println("Podaj ID za które pomieszczenie chcesz zapłacić");
+            int idFromUser = sc.nextInt();
+            try {
+                Main.choosenPerson.listOfTenantAlert.remove(idFromUser);
+                System.out.println("Zapłata przebiegła pomyślnie");
+                SubMenu.actionsOfWarehouse();
+            } catch (Exception e) {
+                System.out.println("Wybrano złe ID. Powrót do menu głównego");
+                SubMenu.actionsOfWarehouse();
+            }
+        }
     }
 
     public static void setPermissionToOpenSpace(Scanner sc) {
