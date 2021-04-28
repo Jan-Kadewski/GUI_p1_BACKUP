@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Menu {
     private static Scanner sc = ScannerManager.getScanner();
-    static void showMainMenu() {
+    static void showMainMenu() throws NeverRentException {
         ArrayList<String> menu = new ArrayList<String>();
         menu.add("Wybierz/zmień użytkownika");
         menu.add("Stwórz użytkownika");

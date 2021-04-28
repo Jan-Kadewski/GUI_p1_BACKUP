@@ -47,6 +47,7 @@ public class ParkingSpace {
 
 
     public static void rentParkingSpaceById(Scanner sc){
+       if(Person.totalCostForRents <1250){
         System.out.println("Wybierz parking podając jego ID");
         for(int i=0;i<listOfAllParkingSpaces.size();i++){
             System.out.println(listOfAllParkingSpaces.get(i));
@@ -55,13 +56,14 @@ public class ParkingSpace {
         for(ParkingSpace p: listOfAllParkingSpaces){
             if(p.id == id){
                 System.out.println("dodaje miejsce parkingowe do listy");
-//                Main.choosenPerson.list
+                Person.listOfParkingForPerson.add(p);
                 p.isRented = true;
             }
-            else{
-                System.out.println("Albo jednak nie dodaje do listy :>");
-            }
         }
+       }
+       else{
+           System.out.println("Posiadasz zadłużenie na kwotę" +Person.totalCostForRents + " Odmowa wynajęcia");
+       }
     }
 
 

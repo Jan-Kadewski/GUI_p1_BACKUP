@@ -29,7 +29,7 @@ public class Item {
     }
 
 
-    public static void itemMenu(Scanner sc) {
+    public static void itemMenu(Scanner sc) throws NeverRentException, TooManyThingsException {
         System.out.println("Co chcesz zrobić?");
         System.out.println("1. Wstaw przedmiot podając jego nazwę i pole powierzchni");
         System.out.println("2. Wstaw przedmiot podając jego nazwę, szerokość X długość X wysokość ");
@@ -44,17 +44,24 @@ public class Item {
                 double itemArea = sc.nextDouble();
                 System.out.println(Main.choosenPerson.listOfRentedArea);
                 for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
-                    if (cw.usableArea >= itemArea) {
-                        Person.listOfItem.add(new Item(itemName, itemArea, idCounter.getAndIncrement()));
-                        System.out.println(Person.listOfItem);
-                        cw.usableArea = cw.usableArea - itemArea;
-                        System.out.println("Pozostała przestrzeń w magazynie " +cw.usableArea);
-                        System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + itemArea);
-                        System.out.println("Przedmiot został pomyślnie dodany");
-                        SubMenu.actionsOfWarehouse();
-                    } else {
-                        System.out.println("Niepomyślne wkładanie przedmiotu. Przedmiot za duży");
-                        SubMenu.actionsOfWarehouse();
+                    try {
+                        if (cw.usableArea >= itemArea) {
+                            Person.listOfItem.add(new Item(itemName, itemArea, idCounter.getAndIncrement()));
+                            System.out.println(Person.listOfItem);
+                            cw.usableArea = cw.usableArea - itemArea;
+                            System.out.println("Pozostała przestrzeń w magazynie " + cw.usableArea);
+                            System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + itemArea);
+                            System.out.println("Przedmiot został pomyślnie dodany");
+                            SubMenu.actionsOfWarehouse();
+                        }
+                    } catch (Exception TooManyThingsException) {
+
+                        try {
+                            SubMenu.actionsOfWarehouse();
+                        } catch (NeverRentException | TooManyThingsException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                 }
@@ -78,10 +85,18 @@ public class Item {
                         System.out.println(cw.usableArea);
                         System.out.println("Podano przedmiot o nazwie: " + itemName + " o polu powierzchni " + width * length * height);
                         System.out.println("Przedmiot został pomyślnie dodany");
-                        SubMenu.actionsOfWarehouse();
+                        try {
+                            SubMenu.actionsOfWarehouse();
+                        } catch (NeverRentException | TooManyThingsException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         System.out.println("Przedmiot jest za duży i nie mieści się w magazynie");
-                        SubMenu.actionsOfWarehouse();
+                        try {
+                            SubMenu.actionsOfWarehouse();
+                        } catch (NeverRentException | TooManyThingsException e) {
+                            e.printStackTrace();
+                        }
 
                     }
 

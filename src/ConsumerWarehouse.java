@@ -21,7 +21,7 @@ public class ConsumerWarehouse {
     double costOfRentSpace;
     Long id;
     boolean isRented;
-    static List<ConsumerWarehouse> listOfAllConsumerWarehouses = new ArrayList<>();
+    static List<ConsumerWarehouse> listOfAllConsumerWarehouses;
     Scanner sc = new Scanner(System.in);
 
     public ConsumerWarehouse(double width, double length, double height, int startRentYear,
@@ -42,6 +42,7 @@ public class ConsumerWarehouse {
         this.endRentYear = endRentYear;
         endOfRentDate = LocalDate.of(endRentYear, endRentMonth, endRentMonth);
         this.isRented = isRented;
+        listOfAllConsumerWarehouses = new ArrayList<>();
     }
 
     public ConsumerWarehouse(double usableArea, int startRentYear, int startRentMonth, int startRentDay, int endRentDay, int endRentMonth, int endRentYear,
@@ -58,9 +59,13 @@ public class ConsumerWarehouse {
         this.endRentMonth = endRentMonth;
         this.endRentYear = endRentYear;
         endOfRentDate = LocalDate.of(endRentYear, endRentMonth, endRentMonth);
+        listOfAllConsumerWarehouses = new ArrayList<>();
+
     }
 
-    public static void checkIfRentExpired(Scanner sc) {
+
+
+    public static void checkIfRentExpired(Scanner sc) throws ProblematicTenantException {
         System.out.println("Weryfikacja  zadluzenia, podaj ID obecnie wynajmowanego pomieszczenia");
         for (int i = 0; i < Main.choosenPerson.listOfTenantAlert.size(); i++) {
             System.out.println(Main.choosenPerson.listOfTenantAlert.get(i));
@@ -80,8 +85,8 @@ public class ConsumerWarehouse {
                     System.out.println(Main.choosenPerson.listOfTenantAlert);
                     if (Main.choosenPerson.listOfTenantAlert.size() >= 3) {
                         //TODO: Tu napisać logikę, co zrobić, gdy ktoś ma 3 zadłużenia, połowa II strony
+                        throw new ProblematicTenantException("Osoba" + Main.choosenPerson.name+ " " + Main.choosenPerson.lastName + " posiadała już najem pomieszczeń" +Main.choosenPerson.listOfRentedArea  + "\n"+ Person.listOfParkingForPerson +    "\n" + "wysokosc zadlużenia" + Person.totalCostForRents );
                     }
-
                 } else {
                     System.out.println("Wszystko w porządku, nie zalegasz z płatnością za to pomieszczenie");
                 }
@@ -126,18 +131,38 @@ public class ConsumerWarehouse {
         }
     }
 
-    public static void showRentedSpace() {
+    public static void showRentedSpace()  {
+
         for (int i = 0; i < Main.choosenPerson.listOfRentedArea.size(); i++) {
             System.out.println(Main.choosenPerson.listOfRentedArea.get(i));
         }
+        for(int i=0;i<Person.listOfParkingForPerson.size();i++){
+            System.out.println("Miejsce parkingowe o id nr:" +Person.listOfParkingForPerson.get(i).id +" Kwocie zadłużenia "
+                    + Person.listOfParkingForPerson.get(i).price);
+        }
+        for(Person p:Person.listOfPersons){
+          if(p.firstDayOfRent >0 && p.firstDayOfRent <=31){
+
+          }
+         else{
+              try {
+                  throw new NeverRentException("Nigdy nie wynajęto pomieszczenia");
+              } catch (NeverRentException e) {
+                  e.printStackTrace();
+              }
+          }
+        }
+
     }
+
 
     public static void rentSpaceById(Scanner sc) {
         System.out.println("wprowadz ID pomieszczenia");
-        String id = sc.next();
+        long id = sc.nextLong();
         if (Main.choosenPerson.isAllowedToOpenAndPutOrTakeIntoSpace) {
             for (ConsumerWarehouse cw : listOfAllConsumerWarehouses) {
-                if (cw.id == Long.parseLong(id) && cw.isRented == false) {
+
+                if (cw.id == id && cw.isRented == false) {
                     System.out.println(Main.choosenPerson.listOfRentedArea);
                     Main.choosenPerson.listOfRentedArea.add(cw);
                     System.out.println("Pomyślnie wynajęto nową przestrzeń magazynową");
@@ -146,29 +171,41 @@ public class ConsumerWarehouse {
                 }
             }
         } else {
-            System.out.println("Nie jesteś uprawniony do wynajmowania większej ilości powierzchni");
-            SubMenu.actionsOfWarehouse();
-        }
-    }
-
-    public static void addItemToRentedSpace(Scanner sc) {
-        System.out.println(Main.choosenPerson.listOfRentedArea);
-        System.out.println("Wybierz do którego pomieszczenia chcesz włożyć przedmiot podająć ID pomieszczenia");
-        long idFromUser = sc.nextInt();
-        for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
-            if (cw.id == idFromUser) {
-                System.out.println("Wszedłem");
-                Item.itemMenu(sc);
-                // TODO:zwalidować wybór magazynu i wybranie ITEMU
-
-            } else {
-                System.out.println("Błędnie wybrane ID");
+            System.out.println("Posiadasz zadłużenie na kwotę " +Person.totalCostForRents + " Odmowa wynajęcia");
+            try {
                 SubMenu.actionsOfWarehouse();
+            } catch (NeverRentException e) {
+                e.printStackTrace();
+            } catch (TooManyThingsException e) {
+                e.printStackTrace();
             }
         }
     }
 
-    public static void removeItemFromRentedSpace(Scanner sc) {
+    public static void addItemToRentedSpace(Scanner sc) throws NeverRentException, TooManyThingsException {
+        System.out.println(Main.choosenPerson.listOfRentedArea);
+        System.out.println("Wybierz do którego pomieszczenia chcesz włożyć przedmiot podająć ID pomieszczenia");
+        long idFromUser = sc.nextInt();
+        for (ConsumerWarehouse cw : Main.choosenPerson.listOfRentedArea) {
+            System.out.println(cw.id == idFromUser);
+            System.out.println(Main.choosenPerson.listOfRentedArea.get((int)idFromUser));
+            System.out.println(cw.id);
+            System.out.println(idFromUser);
+            if (cw.id == idFromUser) {
+                Item.itemMenu(sc);
+            } else {
+                try {
+                    throw new TooManyThingsException("remove some old items to insert a new item");
+                } catch (TooManyThingsException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            SubMenu.actionsOfWarehouse();
+        }
+    }
+
+    public static void removeItemFromRentedSpace(Scanner sc) throws TooManyThingsException {
         for (int i = 0; i < Person.listOfItem.size(); i++) {
             System.out.println(Person.listOfItem.get(i));
         }
@@ -184,7 +221,11 @@ public class ConsumerWarehouse {
                     Person.listOfItem.remove((int) id);
                     if(Person.listOfItem.size() ==0){
                         System.out.println("Brak przedmiotów, powrót do głównego menu");
-                        SubMenu.actionsOfWarehouse();
+                        try {
+                            SubMenu.actionsOfWarehouse();
+                        } catch (NeverRentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     System.out.println("Podano złe ID");
@@ -197,15 +238,20 @@ public class ConsumerWarehouse {
     @Override
     public String toString() {
         return "ConsumerWarehouse{" +
-                ", id=" + id +
-                ", isRented=" + isRented +
+                "width=" + width +
+                ", length=" + length +
+                ", height=" + height +
                 ", usableArea=" + usableArea +
                 ", startRentYear=" + startRentYear +
                 ", startRentMonth=" + startRentMonth +
                 ", startRentDay=" + startRentDay +
+                ", endRentYear=" + endRentYear +
+                ", endRentMonth=" + endRentMonth +
+                ", endRentDay=" + endRentDay +
                 ", costOfRentSpace=" + costOfRentSpace +
+                ", id=" + id +
+                ", isRented=" + isRented +
+
                 '}';
     }
-
-
 }

@@ -1,0 +1,4 @@
+ConsumerWarehouse{width=0.0, length=0.0, height=0.0, usableArea=15.0, startRentYear=2020, startRentMonth=3, startRentDay=10, endRentYear=15, endRentMonth=1, endRentDay=2021, costOfRentSpace=200.0, id=0, isRented=true}
+ConsumerWarehouse{width=0.0, length=0.0, height=0.0, usableArea=10.0, startRentYear=2021, startRentMonth=1, startRentDay=9, endRentYear=2021, endRentMonth=1, endRentDay=30, costOfRentSpace=300.0, id=6, isRented=true}
+ConsumerWarehouse{width=0.0, length=0.0, height=0.0, usableArea=78.0, startRentYear=2021, startRentMonth=1, startRentDay=8, endRentYear=2021, endRentMonth=3, endRentDay=25, costOfRentSpace=250.0, id=7, isRented=true}
+Item{, ID przedmiotu 0 name='m', width=0.0, length=0.0, height=0.0, volume=10.0}
